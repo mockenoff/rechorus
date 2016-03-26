@@ -79,6 +79,17 @@ body {
 			background: #17BAB3;
 			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) inset;
 		}
+	.progress svg {
+		top: 0;
+		left: 0;
+		opacity: 0.3;
+		position: absolute;
+		pointer-events: none;
+	}
+
+.area {
+	fill: steelblue;
+}
 
 #media {
 	width: 100%;

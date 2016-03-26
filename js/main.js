@@ -29,6 +29,7 @@ function onPlayerReady(ev) {
 	progress.setAttribute('value', player.getCurrentTime());
 	player.playVideo();
 	updateTime();
+	createGraph();
 }
 
 function onPlayerStateChange(ev) {
@@ -68,3 +69,23 @@ function updateTime(timestamp) {
 	}
 }
 requestAnimationFrame(updateTime);
+
+var DATA = [2, 2, 0, 6, 10, 18, 4, 12, 15, 6, 8, 10, 1, 3, 6, 9, 15, 8, 9, 17, 10, 8];
+// Add boundary items so it fills the entire graph
+DATA.unshift(0);
+DATA.push(DATA[DATA.length - 1]);
+// Turn them into minute-based tuples
+for (var i = 0, l = DATA.length; i < l; i++) {
+	DATA[i] = [i, DATA[i]];
+}
+// Append SVG
+var svg = d3.select(progress.parentNode).append('svg').attr('width', progress.clientWidth).attr('height', progress.clientHeight);
+
+function createGraph() {
+	var x = d3.time.scale().range([0, progress.clientWidth]);
+	var y = d3.scale.linear().range([progress.clientHeight, 0]);
+	x.domain(d3.extent(DATA, function(d) { return d[0]; }));
+	y.domain(d3.extent(DATA, function(d) { return d[1]; }));
+	var area = d3.svg.area().interpolate('basis').x(function(d) { return x(d[0]); }).y0(progress.clientHeight).y1(function(d) { return y(d[1]); });
+	svg.append('path').datum(DATA).attr('class', 'area').attr('d', area);
+}
