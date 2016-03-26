@@ -67,8 +67,19 @@ body {
 	.controls .progress {
 		height: 100%;
 		flex-grow: 1;
+		cursor: pointer;
 		background: #FFF;
 		position: relative;
+	}
+	.controls .track {
+		top: 0;
+		left: 0;
+		width: 0;
+		height: 100%;
+		position: absolute;
+		pointer-events: none;
+		background: rgba(0, 0, 0, 0.5);
+		transition: width 0.1 ease-out;
 	}
 	.controls progress {
 		width: 100%;

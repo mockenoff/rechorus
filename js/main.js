@@ -1,8 +1,10 @@
 var player,
-	plause = document.querySelector('.controls .plause'),
-	progress = document.querySelector('.controls progress'),
+	controls = document.querySelector('.controls'),
+	plause = controls.querySelector('.plause'),
+	progress = controls.querySelector('progress'),
 	SKIP_CHUNK = 5,
 	VOLUME_CHUNK = 5;
+
 
 function onYouTubeIframeAPIReady() {
 	player = new YT.Player('player', {
@@ -24,6 +26,7 @@ function onYouTubeIframeAPIReady() {
 	});
 }
 
+
 function onPlayerReady(ev) {
 	console.log('READY', ev);
 	progress.setAttribute('max', player.getDuration());
@@ -34,6 +37,7 @@ function onPlayerReady(ev) {
 	createGraph();
 }
 
+
 function onPlayerStateChange(ev) {
 	console.log('CHANGE', ev);
 	if (player.getPlayerState() === YT.PlayerState.PAUSED) {
@@ -43,6 +47,7 @@ function onPlayerStateChange(ev) {
 	}
 }
 
+
 plause.addEventListener('click', function(ev) {
 	ev.preventDefault();
 	if (player.getPlayerState() === YT.PlayerState.PAUSED) {
@@ -51,6 +56,30 @@ plause.addEventListener('click', function(ev) {
 		player.pauseVideo();
 	}
 });
+
+
+var progressContainer = progress.parentNode,
+	progressTrack = progressContainer.querySelector('.track'),
+	progressWidth = progressContainer.clientWidth;
+
+progressContainer.addEventListener('click', function(ev) {
+	console.log('CLICK', ev);
+	player.seekTo((player.getDuration() * (ev.offsetX / progressWidth)), true);
+});
+
+progressContainer.addEventListener('mouseover', function(ev) {
+	progressContainer.addEventListener('mousemove', mousemove);
+});
+
+progressContainer.addEventListener('mouseout', function(ev) {
+	progressContainer.removeEventListener('mousemove', mousemove);
+	progressTrack.style.width = '0%';
+});
+
+function mousemove(ev) {
+	progressTrack.style.width = (100 * (ev.offsetX / progressWidth))+'%';
+}
+
 
 document.body.addEventListener('keydown', function(ev) {
 	var input = false,
@@ -88,6 +117,7 @@ document.body.addEventListener('keydown', function(ev) {
 	}
 });
 document.body.focus();
+
 
 function updateTime(timestamp) {
 	if (progress.getAttribute('max') !== undefined && player !== undefined) {
