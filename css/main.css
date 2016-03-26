@@ -1,0 +1,89 @@
+/*
+	RESET
+*/
+html, body, header, div, section, iframe, progress {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	outline: none;
+	list-style: none;
+	text-decoration: none;
+}
+
+/*
+	GENERAL
+*/
+html, body {
+	height: 100%;
+}
+
+body {
+	background: #EEE;
+	line-height: 150%;
+}
+
+/*
+	RESPONSIVE IFRAME
+*/
+.embed-container {
+	height: 0 !important;
+	position: relative;
+	padding-bottom: 56.25% !important;
+	overflow: hidden;
+	max-width: 100%;
+}
+.embed-container iframe,
+.embed-container object,
+.embed-container embed {
+	position: absolute !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+/*
+	CONTROLS
+*/
+.controls {
+	width: 100%;
+	height: 40px;
+	display: flex;
+}
+	.controls button {
+		width: 40px;
+		border: 1px solid #000;
+		box-sizing: border-box;
+	}
+	.controls .progress {
+		height: 100%;
+		flex-grow: 1;
+		position: relative;
+	}
+	.controls progress {
+		width: 100%;
+		height: 100%;
+		display: block;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+	}
+		.controls progress,
+		.controls progress::-webkit-progress-bar {
+			color: #17BAB3;
+			background: #F2F2F2;
+		}
+		.controls progress::-webkit-progress-value,
+		.controls progress::-moz-progress-bar,
+		.controls progress::-ms-fill {
+			background: #17BAB3;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) inset;
+		}
+
+#media {
+	width: 100%;
+}
+
+#player {
+	pointer-events: none;
+}
