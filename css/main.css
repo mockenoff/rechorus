@@ -52,18 +52,29 @@ body {
 }
 	.controls button {
 		width: 40px;
-		border: 1px solid #000;
-		box-sizing: border-box;
+		cursor: pointer;
+		overflow: hidden;
+		text-indent: -99999px;
+		background: #FFF no-repeat 0 0;
+		background-size: contain;
 	}
+		.controls button[data-state="pause"] {
+			background-image: url(/img/play.png);
+		}
+		.controls button[data-state="play"] {
+			background-image: url(/img/pause.png);
+		}
 	.controls .progress {
 		height: 100%;
 		flex-grow: 1;
+		background: #FFF;
 		position: relative;
 	}
 	.controls progress {
 		width: 100%;
 		height: 100%;
 		display: block;
+		position: relative;
 		-webkit-appearance: none;
 		-moz-appearance: none;
 		appearance: none;
@@ -71,7 +82,7 @@ body {
 		.controls progress,
 		.controls progress::-webkit-progress-bar {
 			color: #17BAB3;
-			background: #F2F2F2;
+			background: transparent;
 		}
 		.controls progress::-webkit-progress-value,
 		.controls progress::-moz-progress-bar,
