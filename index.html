@@ -5,7 +5,7 @@
 	<link rel="stylesheet" href="/css/main.css" />
 </head>
 <body>
-	<section id="media">
+	<section id="media" tabindex="0">
 		<div class="embed-container">
 			<div id="player"></div>
 		</div>
@@ -18,8 +18,30 @@
 		</div>
 	</section>
 
+	<ol id="tweets">
+		<li class="tweet">
+			<img class="profile" src="https://pbs.twimg.com/profile_images/378800000679332660/93d8a67c62e0d949521a5a585a7367bb_normal.jpeg" />
+			<div class="body">
+				<h4><a href="https://twitter.com/mockenoff">mockenoff</a> <span class="date">Mar 25 01:22:18 +0000 2016</span></h4>
+				<p>RT @<a href="https://twitter.com/bradshoemaker">bradshoemaker</a>: The future is now. <a href="https://t.co/Ecz9M4OdM9">https://t.co/Ecz9M4OdM9</a></p>
+				<ul class="images">
+					<li><a href="http://twitter.com/bradshoemaker/status/713157711878197248/photo/1"><img src="https://pbs.twimg.com/media/CeWlKO4UMAAuyrl.jpg" /></a></li>
+				</ul>
+			</div>
+		</li>
+		<li class="tweet">
+			<img class="profile" src="https://pbs.twimg.com/profile_images/378800000679332660/93d8a67c62e0d949521a5a585a7367bb_normal.jpeg" />
+			<div class="body">
+				<h4><a href="https://twitter.com/mockenoff">mockenoff</a> <span class="date">Mar 22 04:33:31 +0000 2016</span></h4>
+				<p>@<a href="https://twitter.com/saruhstritt">saruhstritt</a> @<a href="https://twitter.com/jimmydeez">jimmydeez</a> @<a href="https://twitter.com/tubatootinrox">tubatootinrox</a> booooo</p>
+			</div>
+		</li>
+	</ol>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
 	<script src="https://www.youtube.com/iframe_api"></script>
 	<script src="//d3js.org/d3.v3.min.js"></script>
+	<script src="/js/media_player.js"></script>
 	<script src="/js/main.js"></script>
 </body>
 </html>

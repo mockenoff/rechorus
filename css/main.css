@@ -1,7 +1,7 @@
 /*
 	RESET
 */
-html, body, header, div, section, iframe, progress, button {
+html, body, header, div, section, iframe, progress, button, ol, ul, li, h4, img, p {
 	border: 0;
 	margin: 0;
 	padding: 0;
@@ -109,10 +109,45 @@ body {
 		pointer-events: none;
 	}
 
+/*
+	MEDIA
+*/
 #media {
 	width: 100%;
 }
+	#media .embed-container {
+		pointer-events: none;
+	}
 
 #player {
 	pointer-events: none;
 }
+
+/*
+	TWEETS
+*/
+#tweets {
+	width: 100%;
+}
+.tweet {
+	display: flex;
+	align-items: flex-start;
+}
+	.tweet .profile {
+		width: 48px;
+		height: 48px;
+	}
+	.tweet .body {
+		flex-grow: 1;
+	}
+	.tweet .images {
+		width: 100%;
+		display: flex;
+		align-items: flex-start;
+	}
+		.tweet .images li {
+			flex-grow: 1;
+		}
+		.tweet .images img {
+			width: 100%;
+		}
