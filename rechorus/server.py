@@ -5,23 +5,13 @@ import tweepy
 
 APP = flask.Flask(
 	__name__, static_url_path='',
+	static_folder=os.path.join(
+		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'static'),
 	template_folder=os.path.join(
 		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'templates'))
 
 CONSUMER_KEY = 'dummykey'
 CONSUMER_SECRET = 'dummysecret'
-
-@APP.route('/js/<path:path>')
-def send_js(path):
-	return flask.send_from_directory(os.path.join(os.pardir, 'js'), path)
-
-@APP.route('/css/<path:path>')
-def send_css(path):
-	return flask.send_from_directory(os.path.join(os.pardir, 'css'), path)
-
-@APP.route('/img/<path:path>')
-def send_img(path):
-	return flask.send_from_directory(os.path.join(os.pardir, 'img'), path)
 
 @APP.route('/', methods=['GET'])
 def index():
