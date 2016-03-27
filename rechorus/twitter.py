@@ -1,12 +1,18 @@
 import tweepy
 
 class Twitter(object):
-	CONSUMER_KEY = 'MLhwOfLaGMIIqoXZjrWbhrGIl'
-	CONSUMER_SECRET = 'hmvActnMkCacha2cAF3oi1XhUI0Q8NbvFdTAqYS2pFTYCpYBHz'
+	CONSUMER_KEY = 'dummykey'
+	CONSUMER_SECRET = 'dummykey'
 
-	def __init__(self):
-		auth = tweepy.OAuthHandler(Twitter.CONSUMER_KEY, Twitter.CONSUMER_SECRET)
-		try:
-			redirect_url = auth.get_authorization_url()
-		except tweepy.TweepError:
-			print 'Error! Failed to get request token.'
+	def __init__(self, access_token, access_token_secret):
+		self.auth = Twitter.make_auth()
+		self.auth.set_access_token(access_token, access_token_secret)
+		self.api = tweepy.API(self.auth)
+
+	@property
+	def friends(self):
+		return tweepy.Cursor(self.api.friends_ids)
+
+	@staticmethod
+	def make_auth():
+		return tweepy.OAuthHandler(Twitter.CONSUMER_KEY, Twitter.CONSUMER_SECRET)

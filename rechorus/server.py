@@ -3,15 +3,14 @@ import os
 import flask
 import tweepy
 
+from twitter import Twitter
+
 APP = flask.Flask(
 	__name__, static_url_path='',
 	static_folder=os.path.join(
 		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'static'),
 	template_folder=os.path.join(
 		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'templates'))
-
-CONSUMER_KEY = 'dummykey'
-CONSUMER_SECRET = 'dummysecret'
 
 @APP.route('/', methods=['GET'])
 def index():
@@ -25,7 +24,7 @@ def index():
 def connect():
 	oauth_token = flask.request.args.get('oauth_token')
 	oauth_verifier = flask.request.args.get('oauth_verifier')
-	auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+	auth = Twitter.make_auth()
 
 	if oauth_token and oauth_verifier:
 		token = flask.session.pop('request_token', None)
@@ -53,8 +52,14 @@ def connect():
 def player():
 	access_token = flask.session.get('access_token')
 	access_token_secret = flask.session.get('access_token_secret')
+
 	if not access_token or not access_token_secret:
 		return flask.redirect('/connect/')
+
+	twt = Twitter(
+		access_token=access_token,
+		access_token_secret=access_token_secret)
+
 	return flask.render_template('player.html')
 
 if __name__ == '__main__':
