@@ -1,4 +1,5 @@
 import os
+import random
 
 import flask
 import tweepy
@@ -59,6 +60,14 @@ def player():
 	twt = Twitter(
 		access_token=access_token,
 		access_token_secret=access_token_secret)
+
+	total = 0
+	subset = []
+	friends = twt.friends_ids.items()
+	while total <= 180:
+		choice = random.choice(friends)
+		friends.pop(friends.index(choice))
+		subset.append(choice)
 
 	return flask.render_template('player.html')
 
