@@ -24,8 +24,12 @@ class Twitter(object):
 	def get_formatted_text(status):
 		text = status.text
 
-		entities = status.entities['urls'] + status.entities['user_mentions']
+		entities = []
+		for key in ('urls', 'user_mentions', 'media'):
+			if key in status.entities:
+				entities += status.entities[key]
 		entities.sort(key=lambda x: x['indices'][0], reverse=True)
+
 		for entity in entities:
 			replacement = text[entity['indices'][0]:entity['indices'][1]]
 			if 'url' in entity:
@@ -38,7 +42,7 @@ class Twitter(object):
 
 	@staticmethod
 	def format_status(status):
-		return {
+		data = {
 			'user': {
 				'name': status.user.name,
 				'screen_name': status.user.screen_name,
@@ -48,7 +52,14 @@ class Twitter(object):
 			'text': status.text,
 			'formatted_text': Twitter.get_formatted_text(status),
 			'created_at': status.created_at,
+			'is_retweet': hasattr(status, 'retweeted_status'),
 		}
+		if 'media' in status.entities:
+			data['media'] = [{
+				'media_url': media['media_url_https'],
+				'expanded_url': media['expanded_url'],
+			} for media in status.entities['media']]
+		return data
 
 	def get_timeline(self, user_ids, start, end=None):
 		if isinstance(user_ids, str):
