@@ -1,3 +1,11 @@
+"""
+.. module:: twitter
+	:platform: Unix
+	:synopsis: Twitter methods for aggregating timelines
+.. moduleauthor:: Tim Poon <timothycpoon@gmail.com>
+
+"""
+
 import datetime
 from collections import defaultdict
 

@@ -1,10 +1,20 @@
+"""
+.. module:: server
+	:platform: Unix
+	:synopsis: Flask server endpoints
+.. moduleauthor:: Tim Poon <timothycpoon@gmail.com>
+
+"""
+
 import os
 import random
 
 import flask
 import tweepy
 
+import utils
 from twitter import Twitter
+
 
 APP = flask.Flask(
 	__name__, static_url_path='',
@@ -13,6 +23,7 @@ APP = flask.Flask(
 	template_folder=os.path.join(
 		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'templates'))
 
+
 @APP.route('/', methods=['GET'])
 def index():
 	access_token = flask.session.get('access_token')
@@ -20,6 +31,7 @@ def index():
 	if access_token and access_token_secret:
 		return flask.redirect('/player/')
 	return flask.render_template('index.html')
+
 
 @APP.route('/connect/', methods=['GET'])
 def connect():
@@ -49,6 +61,7 @@ def connect():
 		flask.session['request_token'] = auth.request_token
 		return flask.redirect(redirect_url, code=302)
 
+
 @APP.route('/player/', methods=['GET'])
 def player():
 	access_token = flask.session.get('access_token')
@@ -61,15 +74,8 @@ def player():
 		access_token=access_token,
 		access_token_secret=access_token_secret)
 
-	total = 0
-	subset = []
-	friends = twt.friends_ids.items()
-	while total <= 180:
-		choice = random.choice(friends)
-		friends.pop(friends.index(choice))
-		subset.append(choice)
-
 	return flask.render_template('player.html')
+
 
 if __name__ == '__main__':
 	APP.secret_key = 'dummykey'
