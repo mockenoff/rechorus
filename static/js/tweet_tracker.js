@@ -13,6 +13,8 @@ function TweetTracker(container, settings) {
 	var isLoaded = false,
 		tweets = null,
 		minutes = null,
+		active = null,
+		timeline = null,
 		format = d3.time.format('%Y-%m-%d %H:%M:%S'),
 		defaultSettings = {
 			end: null,
@@ -92,32 +94,53 @@ function TweetTracker(container, settings) {
 			}
 
 			console.log('TWEETS', data);
+			timeline = [];
 			isLoaded = true;
-			tweets = data.tweets;
+
+			tweets = [];
 			minutes = data.minutes;
 
 			var html = '';
-			for (var i = 0, l = tweets.length; i < l; i++) {
-				var media = '';
-				if (tweets[i].media !== undefined) {
-					for (var j = 0, k = tweets[i].media.length; j < k; j++) {
-						media += this.renderTemplate('item', tweets[i].media[j]);
+			for (var i = 0, l = data.tweets.length; i < l; i++) {
+				var media = '',
+					curr = format.parse(data.tweets[i].created_at).getTime() - settings.start.getTime();
+
+				if (curr < 0) {
+					continue;
+				}
+
+				timeline.push(curr);
+				tweets.push(data.tweets[i]);
+
+				if (data.tweets[i].media !== undefined) {
+					for (var j = 0, k = data.tweets[i].media.length; j < k; j++) {
+						media += this.renderTemplate('item', data.tweets[i].media[j]);
 					}
 					media = this.renderTemplate('list', {images: media});
 				}
 
 				html += this.renderTemplate('tweet', {
 					media: media,
-					created_at: tweets[i].created_at,
-					screen_name: tweets[i].user.screen_name,
-					formatted_text: tweets[i].formatted_text,
-					profile_image_url: tweets[i].user.profile_image_url,
+					created_at: data.tweets[i].created_at,
+					screen_name: data.tweets[i].user.screen_name,
+					formatted_text: data.tweets[i].formatted_text,
+					profile_image_url: data.tweets[i].user.profile_image_url,
 				});
 			}
 			container.innerHTML = html;
 
+			for (i = 0, l = timeline.length; i < l; i++) {
+				timeline[i] = {
+					curr: timeline[i],
+					next: i < 1 ? null : timeline[i - 1].curr,
+					prev: i === l - 1 ? null : timeline[i + 1],
+				};
+			}
+			active = l - 1;
+			console.log('TIME', timeline);
+
 			if (typeof settings.onLoadTweets === 'function') {
-				settings.onLoadTweets(tweets, minutes);
+				settings.onLoadTweets(data.tweets, minutes);
 			}
 		}.bind(this));
 	}.bind(this);

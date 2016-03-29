@@ -212,8 +212,9 @@ body {
 #tweets {
 	padding: 10px;
 	flex-basis: 25%;
-	overflow: scroll;
 	min-width: 300px;
+	overflow-y: scroll;
+	overflow-x: hidden;
 	box-sizing: border-box;
 }
 .tweet {
