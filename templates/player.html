@@ -46,11 +46,14 @@
 	</ol>
 
 	<script type="text/template" id="tweet-template">
-		<img class="profile" src="[[ profile_image_url ]]" />
-		<div class="body">
-			<h4><a href="https://twitter.com/[[ screen_name ]]">[[ screen_name ]]</a> <span class="date">[[ created_at ]]</span></h4>
-			<p>[[ formatted_text ]]</p>
-		</div>
+		<li class="tweet">
+			<img class="profile" src="[[ profile_image_url ]]" />
+			<div class="body">
+				<h4><a href="https://twitter.com/[[ screen_name ]]">[[ screen_name ]]</a> <span class="date">[[ created_at ]]</span></h4>
+				<p>[[ formatted_text ]]</p>
+				[[ media ]]
+			</div>
+		</li>
 	</script>
 
 	<script type="text/template" id="media-list-template">

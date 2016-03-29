@@ -210,12 +210,15 @@ body {
 	TWEETS
 */
 #tweets {
+	padding: 10px;
 	flex-basis: 25%;
 	overflow: scroll;
 	min-width: 300px;
+	box-sizing: border-box;
 }
 .tweet {
 	display: flex;
+	margin: 0 0 20px 0;
 	align-items: flex-start;
 }
 	.tweet .profile {
@@ -224,10 +227,12 @@ body {
 	}
 	.tweet .body {
 		flex-grow: 1;
+		padding: 0 0 0 10px;
 	}
 	.tweet .images {
 		width: 100%;
 		display: flex;
+		margin: 15px 0 0 0;
 		align-items: flex-start;
 	}
 		.tweet .images li {
