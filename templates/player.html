@@ -79,6 +79,8 @@
 						start: '{{ start_str }}',
 						onLoadTweets: function(tweets, minutes) {
 							player.createGraph(tracker.morphMinutes(minutes));
+							player.toggleLoader(false);
+							player.play();
 						},
 					});
 					tracker.loadTweets();

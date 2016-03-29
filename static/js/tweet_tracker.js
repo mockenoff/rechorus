@@ -41,13 +41,15 @@ function TweetTracker(container, settings) {
 	if (typeof settings.duration === 'string') {
 		settings.duration = parseInt(settings.duration, 10);
 	}
+	console.log('SETTINGS', settings.start, settings.end, settings.duration);
 	if (typeof settings.duration === 'number') {
 		if (typeof settings.start === 'object') {
-			settings.end = new Date(settings.start.getTime() + settings.duration);
+			settings.end = new Date(settings.start.getTime() + (settings.duration * 1000));
 		} else if (typeof settings.end === 'object') {
-			settings.start = new Date(settings.end.getTime() - settings.duration);
+			settings.start = new Date(settings.end.getTime() - (settings.duration * 1000));
 		}
 	}
+	console.log('SETTINGS', settings.start, settings.end, settings.duration);
 
 	this.loadTweets = function() {
 		if (settings.start === null || settings.end === null) {
@@ -71,18 +73,15 @@ function TweetTracker(container, settings) {
 	}.bind(this);
 
 	this.morphMinutes = function(data) {
-		var morphed = [];
-		for (var key in data) {
-			morphed.push({
-				minute: key,
-				count: data[key].length,
-			});
-		}
-		morphed.sort(function(a, b) {
-			return a.minute.localeCompare(b.minute);
-		});
-		for (var i = 0, l = morphed.length; i < l; i++) {
-			morphed[i] = morphed[i].count;
+		var morphed = []
+			start = Math.floor(settings.start.getTime() / (60 * 1000));
+		for (var i = 0, l = Math.ceil(settings.duration / 60); i <= l; i++) {
+			var minute = start + i;
+			if (minute in data) {
+				morphed.push(data[minute].length);
+			} else {
+				morphed.push(0);
+			}
 		}
 		return morphed;
 	}.bind(this);

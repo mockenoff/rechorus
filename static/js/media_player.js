@@ -37,7 +37,8 @@ function MediaPlayer(container, settings) {
 
 
 	// Grab the necessary elements
-	var plause = container.querySelector('.plause'),
+	var loader = container.querySelector('.loader'),
+		plause = container.querySelector('.plause'),
 		progress = {
 			width: 0,
 			svg: null,
@@ -79,7 +80,6 @@ function MediaPlayer(container, settings) {
 			}
 
 			updateTime();
-			// createGraph();
 
 			if (typeof settings.onPlayerReady === 'function') {
 				settings.onPlayerReady(videoStats.id, videoStats.duration);
@@ -225,16 +225,34 @@ function MediaPlayer(container, settings) {
 	requestAnimationFrame(updateTime);
 
 
+	// Toggle loader overlay
+	this.toggleLoader = function(doShow) {
+		if (doShow === undefined) {
+			loader.classList.toggle('hide');
+		} else if (doShow === true) {
+			loader.classList.remove('hide');
+		} else {
+			loader.classList.add('hide');
+		}
+	}.bind(this);
+
+
+	// Play/pause functions
+	this.play = function() {
+		player.playVideo();
+	}.bind(this);
+
+	this.pause = function() {
+		player.pauseVideo();
+	}.bind(this);
+
+
 	// Graph tweet density on the SVG
 	this.createGraph = function(data) {
 		if (data === undefined || typeof data.push !== 'function') {
 			data = [];
 		}
-console.log('GRAPH', data);
-		// Create fake data
-		// for (var i = 0, l = Math.ceil(videoStats.duration / 60); i < l; i++) {
-		// 	data.push(Math.round(Math.random() * 20));
-		// }
+		console.log('GRAPH', data);
 
 		// Make sure the SVG eixsts
 		if (progress.svg === null) {
