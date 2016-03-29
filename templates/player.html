@@ -45,13 +45,45 @@
 		</li>
 	</ol>
 
+	<script type="text/template" id="tweet-template">
+		<img class="profile" src="[[ profile_image_url ]]" />
+		<div class="body">
+			<h4><a href="https://twitter.com/[[ screen_name ]]">[[ screen_name ]]</a> <span class="date">[[ created_at ]]</span></h4>
+			<p>[[ formatted_text ]]</p>
+		</div>
+	</script>
+
+	<script type="text/template" id="media-list-template">
+		<ul class="images">
+			[[ images ]]
+		</ul>
+	</script>
+
+	<script type="text/template" id="media-item-template">
+		<li><a href="[[ expanded_url ]]"><img src="[[ media_url ]]" /></a></li>
+	</script>
+
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
 	<script src="https://www.youtube.com/iframe_api"></script>
 	<script src="//d3js.org/d3.v3.min.js"></script>
 	<script src="/js/media_player.js"></script>
+	<script src="/js/tweet_tracker.js"></script>
 	<script>
-		var media = document.querySelector('#media'),
-			player = new MediaPlayer(media);
+		var tracker,
+			media = document.querySelector('#media'),
+			player = new MediaPlayer(media, {
+				onPlayerReady: function(videoId, duration) {
+					console.log('CALLBACK', videoId, duration);
+					tracker = new TweetTracker(document.querySelector('#tweets'), {
+						duration: duration,
+						start: '{{ start_str }}',
+						onLoadTweets: function(tweets, minutes) {
+							player.createGraph(tracker.morphMinutes(minutes));
+						},
+					});
+					tracker.loadTweets();
+				},
+			});
 
 		player.loadVideo('{{ video_id }}');
 	</script>

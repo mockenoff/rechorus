@@ -21,6 +21,7 @@ function MediaPlayer(container, settings) {
 				'#f03b20',
 				'#bd0026',
 			],
+			onPlayerReady: null,
 		};
 
 
@@ -78,14 +79,18 @@ function MediaPlayer(container, settings) {
 			}
 
 			updateTime();
-			createGraph();
+			// createGraph();
+
+			if (typeof settings.onPlayerReady === 'function') {
+				settings.onPlayerReady(videoStats.id, videoStats.duration);
+			}
 		}
 	}.bind(this);
 
 
 	// For when the player changes state
 	this.onPlayerStateChange = function(ev) {
-		console.log('STATE', ev);
+		console.log('STATE', isReady, ev);
 		if (ev.data < 0) {
 			isReady = false;
 		} else if (isReady === false) {
@@ -221,15 +226,15 @@ function MediaPlayer(container, settings) {
 
 
 	// Graph tweet density on the SVG
-	var createGraph = function(data) {
+	this.createGraph = function(data) {
 		if (data === undefined || typeof data.push !== 'function') {
 			data = [];
 		}
-
+console.log('GRAPH', data);
 		// Create fake data
-		for (var i = 0, l = Math.ceil(videoStats.duration / 60); i < l; i++) {
-			data.push(Math.round(Math.random() * 20));
-		}
+		// for (var i = 0, l = Math.ceil(videoStats.duration / 60); i < l; i++) {
+		// 	data.push(Math.round(Math.random() * 20));
+		// }
 
 		// Make sure the SVG eixsts
 		if (progress.svg === null) {

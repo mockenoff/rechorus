@@ -9,7 +9,16 @@
 import datetime
 from functools import update_wrapper
 
-from flask import make_response, request, current_app
+import simplejson as json
+from flask import make_response, request, current_app, Response
+
+
+def json_response(data, status=200):
+	return Response(
+		status=status,
+		response=json.dumps(data),
+		mimetype='application/json')
+
 
 def crossdomain(origin=None, methods=None, headers=None,
 				max_age=21600, attach_to_all=True,
