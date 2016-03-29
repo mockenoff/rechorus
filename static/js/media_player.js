@@ -13,6 +13,7 @@ function MediaPlayer(container, settings) {
 			playerId: 'player',
 			skipChunk: 5,
 			volumeChunk: 5,
+			autoplay: false,
 			gradients: [
 				'#ffffb2',
 				'#fd8d3c',
@@ -60,13 +61,21 @@ function MediaPlayer(container, settings) {
 	this.onPlayerReady = function(ev) {
 		console.log('READY', isReady, videoStats.id, ev);
 
-		if (isReady === true && typeof videoStats.id === 'string') {
+		if (typeof videoStats.id === 'string') {
+			if (isReady === false) {
+				return player.loadVideoById(videoStats.id);
+			}
+
 			videoStats.duration = player.getDuration();
 			progress.progress.setAttribute('max', videoStats.duration);
 			progress.progress.setAttribute('value', player.getCurrentTime());
 
 			player.setVolume(100);
-			player.playVideo();
+			if (settings.autoplay === true) {
+				player.playVideo();
+			} else {
+				player.pauseVideo();
+			}
 
 			updateTime();
 			createGraph();
@@ -101,11 +110,11 @@ function MediaPlayer(container, settings) {
 				height: '720',
 				playerVars: {
 					'rel': 0,
-					'autoplay': 1,
 					'controls': 0,
 					'showinfo': 0,
 					'disablekb': 1,
 					'modestbranding': 0,
+					'autoplay': settings.autoplay === true ? 1 : 0,
 				},
 				events: {
 					'onReady': this.onPlayerReady,
@@ -181,6 +190,7 @@ function MediaPlayer(container, settings) {
 
 	// Big function to load a video, collect tweets, and go
 	this.loadVideo = function(videoId, startTime, username) {
+		console.log('LOAD', videoId);
 		videoStats.id = videoId;
 		if (API_READY === true) {
 			player.loadVideoById(videoId);
@@ -286,6 +296,7 @@ function MediaPlayer(container, settings) {
 
 // Global callback for when the YouTube iframe API is ready
 window.onYouTubeIframeAPIReady = function() {
+	console.log('API');
 	API_READY = true;
 	for (var i = 0, l = MEDIA_PLAYERS.length; i < l; i++) {
 		MEDIA_PLAYERS[i].onYouTubeIframeAPIReady();

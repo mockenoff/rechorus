@@ -1,7 +1,7 @@
 /*
 	RESET
 */
-html, body, header, div, section, iframe, progress, button, ol, ul, li, h4, img, p {
+html, body, header, div, section, iframe, progress, button, ol, ul, li, h4, img, p, form, input, label {
 	border: 0;
 	margin: 0;
 	padding: 0;
@@ -42,6 +42,40 @@ body {
 	width: 100% !important;
 	height: 100% !important;
 }
+
+/*
+	FORM
+*/
+.player-form {
+	width: 100%;
+	padding: 0 10px;
+	box-sizing: border-box;
+}
+	.player-form input,
+	.player-form label {
+		width: 100%;
+		display: block;
+		line-height: 150%;
+		margin: 0 0 10px 0;
+	}
+	.player-form input {
+		padding: 6px;
+		font-size: 1.2em;
+		border-radius: 3px;
+		margin: 0 0 18px 0;
+		border: 1px solid #AAA;
+		box-sizing: border-box;
+	}
+	.player-form input[type="submit"] {
+		cursor: pointer;
+		font-size: 1.5em;
+		background: #FFF;
+		margin: 30px 0 0 0;
+		border: 1px solid #AAA;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+	}
 
 /*
 	CONTROLS

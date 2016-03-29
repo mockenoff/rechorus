@@ -42,6 +42,11 @@
 	<script src="https://www.youtube.com/iframe_api"></script>
 	<script src="//d3js.org/d3.v3.min.js"></script>
 	<script src="/js/media_player.js"></script>
-	<script src="/js/main.js"></script>
+	<script>
+		var media = document.querySelector('#media'),
+			player = new MediaPlayer(media);
+
+		player.loadVideo('{{ video_id }}');
+	</script>
 </body>
 </html>

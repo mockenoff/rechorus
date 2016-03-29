@@ -8,6 +8,8 @@
 
 import os
 import random
+import datetime
+from urllib import parse
 
 import flask
 import tweepy
@@ -70,11 +72,22 @@ def player():
 	if not access_token or not access_token_secret:
 		return flask.redirect('/connect/')
 
-	twt = Twitter(
-		access_token=access_token,
-		access_token_secret=access_token_secret)
+	url = flask.request.args.get('url')
+	start = flask.request.args.get('start')
 
-	return flask.render_template('player.html')
+	if not url or not start:
+		return flask.render_template('form.html')
+
+	query = parse.parse_qs(parse.urlparse(url).query)
+	if 'v' not in query or not query['v']:
+		return flask.render_template('form.html', error='Invalid YouTube video URL')
+
+	try:
+		start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
+	except ValueError:
+		return flask.render_template('form.html', error='Invalid start time')
+
+	return flask.render_template('player.html', video_id=query['v'][0], start=start)
 
 
 if __name__ == '__main__':
