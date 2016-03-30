@@ -27,9 +27,10 @@ APP = flask.Flask(
 		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'build', 'templates'))
 
 
-Bower(APP)
-APP.config['BOWER_COMPONENTS_ROOT'] = os.path.join(
-	os.path.dirname(os.path.abspath(__file__)), os.pardir, 'bower_components')
+APP.config.setdefault('BOWER_URL_PREFIX', '/vendor')
+APP.config.setdefault('BOWER_COMPONENTS_ROOT', os.path.join(
+	os.path.dirname(os.path.abspath(__file__)), os.pardir, 'bower_components'))
+BOWER = Bower(APP)
 
 
 @APP.route('/', methods=['GET'])

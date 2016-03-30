@@ -147,9 +147,6 @@ body {
 	flex-grow: 1;
 	position: relative;
 }
-	#media .embed-container {
-		pointer-events: none;
-	}
 
 #player {
 	pointer-events: none;

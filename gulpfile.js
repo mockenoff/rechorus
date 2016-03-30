@@ -28,10 +28,15 @@ gulp.task('templates', function() {
 			site: '@rechorus',
 			creator: '@mockenoff',
 		},
+		vendorUrl: '/vendor',
 		description: 'Rechorus — Replay a live stream with the accompanying Twitter fun!',
 	};
 	return gulp.src(['templates/*.html']).pipe(replace({
 		patterns: [
+			{
+				match: 'vendorUrl',
+				replacement: replacements.vendorUrl,
+			},
 			{
 				match: 'title',
 				replacement: replacements.title,

@@ -1,19 +1,16 @@
-var API_READY = false,
-	MEDIA_PLAYERS = [];
+var API_READY = false;
 
-window.MediaPlayer = function(container, settings) {
-	var player,
-		isReady = false,
+window.MediaPlayer = function(container, player, settings) {
+	var isReady = false,
 		videoStats = {
 			id: null,
 			url: null,
 			duration: 0,
 		},
 		defaultSettings = {
-			playerId: 'player',
 			skipChunk: 5,
 			volumeChunk: 5,
-			autoplay: false,
+			autoplay: true,
 			gradients: [
 				'#ffffb2',
 				'#fd8d3c',
@@ -51,39 +48,37 @@ window.MediaPlayer = function(container, settings) {
 	// Pause/play button event
 	plause.addEventListener('click', function(ev) {
 		ev.preventDefault();
-		if (player.getPlayerState() === YT.PlayerState.PAUSED) {
-			player.playVideo();
+		if (player.state === YT.PlayerState.PAUSED) {
+			player.play();
 		} else {
-			player.pauseVideo();
+			player.pause();
 		}
 	});
 
 
 	// For when the video is ready to play
 	this.onPlayerReady = function(ev) {
-		console.log('READY', isReady, videoStats.id, ev);
+		console.log('READY', isReady, ev);
 
-		if (typeof videoStats.id === 'string') {
-			if (isReady === false) {
-				return player.loadVideoById(videoStats.id);
-			}
+		isReady = true;
+		videoStats.id = player.videoId;
+		videoStats.duration = player.duration;
 
-			videoStats.duration = player.getDuration();
-			progress.progress.setAttribute('max', videoStats.duration);
-			progress.progress.setAttribute('value', player.getCurrentTime());
+		videoStats.duration = player.duration;
+		progress.progress.setAttribute('max', videoStats.duration);
+		progress.progress.setAttribute('value', player.currenttime);
 
-			player.setVolume(100);
-			if (settings.autoplay === true) {
-				player.playVideo();
-			} else {
-				player.pauseVideo();
-			}
+		player.setVolume(100);
+		if (settings.autoplay === true) {
+			player.play();
+		} else {
+			player.pause();
+		}
 
-			updateTime();
+		updateTime();
 
-			if (typeof settings.onPlayerReady === 'function') {
-				settings.onPlayerReady(videoStats.id, videoStats.duration);
-			}
+		if (typeof settings.onPlayerReady === 'function') {
+			settings.onPlayerReady(videoStats.id, videoStats.duration);
 		}
 	}.bind(this);
 
@@ -91,15 +86,15 @@ window.MediaPlayer = function(container, settings) {
 	// For when the player changes state
 	this.onPlayerStateChange = function(ev) {
 		console.log('STATE', isReady, ev);
-		if (ev.data < 0) {
+		if (ev.detail.data < 0) {
 			isReady = false;
 		} else if (isReady === false) {
-			if (ev.data === YT.PlayerState.PLAYING) {
+			if (ev.detail.data === YT.PlayerState.PLAYING) {
 				isReady = true;
 				this.onPlayerReady(ev);
 			}
 		}
-		if (ev.data === YT.PlayerState.PAUSED) {
+		if (ev.detail.data === YT.PlayerState.PAUSED) {
 			plause.setAttribute('data-state', 'pause');
 		} else {
 			plause.setAttribute('data-state', 'play');
@@ -107,27 +102,9 @@ window.MediaPlayer = function(container, settings) {
 	}.bind(this);
 
 
-	// Callback to when the YouTube iframe API is ready
-	this.onYouTubeIframeAPIReady = function() {
-		if (player === undefined) {
-			player = new YT.Player(settings.playerId, {
-				width: '1280',
-				height: '720',
-				playerVars: {
-					'rel': 0,
-					'controls': 0,
-					'showinfo': 0,
-					'disablekb': 1,
-					'modestbranding': 0,
-					'autoplay': settings.autoplay === true ? 1 : 0,
-				},
-				events: {
-					'onReady': this.onPlayerReady,
-					'onStateChange': this.onPlayerStateChange,
-				},
-			});
-		}
-	}.bind(this);
+	// Attach event listeners
+	player.addEventListener('google-youtube-ready', this.onPlayerReady);
+	player.addEventListener('google-youtube-state-change', this.onPlayerStateChange);
 
 
 	// Key bindings
@@ -140,21 +117,21 @@ window.MediaPlayer = function(container, settings) {
 		}
 
 		if (keyCode === 32) {
-			if (player.getPlayerState() === YT.PlayerState.PAUSED) {
-				player.playVideo();
+			if (player.state === YT.PlayerState.PAUSED) {
+				player.play();
 			} else {
-				player.pauseVideo();
+				player.pause();
 			}
 			preventDefault = true;
 		} else if (keyCode === 37) {
 			var timeDelta = ev.shiftKey === true ? settings.skipChunk * 2 : settings.skipChunk,
-				newTime = Math.max(0, player.getCurrentTime() - timeDelta);
-			player.seekTo(newTime, true);
+				newTime = Math.max(0, player.currenttime - timeDelta);
+			player.seekTo(newTime);
 			preventDefault = true;
 		} else if (keyCode === 39) {
 			var timeDelta = ev.shiftKey === true ? settings.skipChunk * 2 : settings.skipChunk,
-				newTime = Math.min(player.getDuration(), player.getCurrentTime() + timeDelta);
-			player.seekTo(newTime, true);
+				newTime = Math.min(player.duration, player.currenttime + timeDelta);
+			player.seekTo(newTime);
 			preventDefault = true;
 		} else if (keyCode === 38) {
 			var newVolume = Math.min(100, player.getVolume() + settings.volumeChunk);
@@ -176,7 +153,7 @@ window.MediaPlayer = function(container, settings) {
 	// Mouse tracking
 	progress.container.addEventListener('click', function(ev) {
 		console.log('CLICK', ev);
-		player.seekTo((player.getDuration() * (ev.offsetX / progress.width)), true);
+		player.seekTo(player.duration * (ev.offsetX / progress.width));
 	});
 
 	progress.container.addEventListener('mouseover', function(ev) {
@@ -190,16 +167,6 @@ window.MediaPlayer = function(container, settings) {
 
 	var onMousemove = function(ev) {
 		progress.track.style.width = (100 * (ev.offsetX / progress.width))+'%';
-	}.bind(this);
-
-
-	// Big function to load a video, collect tweets, and go
-	this.loadVideo = function(videoId, startTime, username) {
-		console.log('LOAD', videoId);
-		videoStats.id = videoId;
-		if (API_READY === true) {
-			player.loadVideoById(videoId);
-		}
 	}.bind(this);
 
 
@@ -218,7 +185,7 @@ window.MediaPlayer = function(container, settings) {
 	// The progress tracker has to update
 	var updateTime = function() {
 		if (progress.progress.getAttribute('max') !== undefined && player !== undefined) {
-			progress.progress.setAttribute('value', player.getCurrentTime());
+			progress.progress.setAttribute('value', player.currenttime);
 			requestAnimationFrame(updateTime);
 		}
 	}.bind(this);
@@ -239,11 +206,11 @@ window.MediaPlayer = function(container, settings) {
 
 	// Play/pause functions
 	this.play = function() {
-		player.playVideo();
+		player.play();
 	}.bind(this);
 
 	this.pause = function() {
-		player.pauseVideo();
+		player.pause();
 	}.bind(this);
 
 
@@ -310,19 +277,8 @@ window.MediaPlayer = function(container, settings) {
 
 
 	// Add to the global tracker and init if the API is ready
-	MEDIA_PLAYERS.push(this);
 	if (API_READY === true && player === undefined) {
 		this.onYouTubeIframeAPIReady();
-	}
-};
-
-
-// Global callback for when the YouTube iframe API is ready
-window.onYouTubeIframeAPIReady = function() {
-	console.log('API');
-	API_READY = true;
-	for (var i = 0, l = MEDIA_PLAYERS.length; i < l; i++) {
-		MEDIA_PLAYERS[i].onYouTubeIframeAPIReady();
 	}
 };
 

@@ -34,13 +34,21 @@
 
 	<!-- Style stuff -->
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="import" href="@@vendorUrl/google-youtube/google-youtube.html" />
 	<!-- inject:css --><!-- endinject -->
 </head>
 <body>
 	<section id="media" tabindex="0">
-		<div class="embed-container">
-			<div id="player"></div>
-		</div>
+		<google-youtube
+			id="player"
+			width="1280px"
+			height="720px"
+			fluid="1"
+			autoplay="0"
+			disablekb="1"
+			chromeless="1"
+			video-id="{{ video_id }}">
+		</google-youtube>
 		<div class="controls">
 			<button class="plause" type="button" data-state="pause">Play/Pause</button>
 			<div class="progress">
@@ -80,30 +88,29 @@
 		<li><a href="[[ expanded_url ]]"><img src="[[ media_url ]]" /></a></li>
 	</script>
 
-	<script src="https://www.youtube.com/iframe_api"></script>
-	<script src="//d3js.org/d3.v3.min.js"></script>
+	<script src="@@vendorUrl/webcomponentsjs/webcomponents.min.js"></script>
+	<script src="@@vendorUrl/d3/d3.min.js"></script>
 	<!-- inject:js --><!-- endinject -->
 
 	<script>
 		var tracker,
 			media = document.querySelector('#media'),
-			player = new MediaPlayer(media, {
+			player = document.querySelector('#player'),
+			mp = new MediaPlayer(media, player, {
 				onPlayerReady: function(videoId, duration) {
 					console.log('CALLBACK', videoId, duration);
 					tracker = new TweetTracker(document.querySelector('#tweets'), {
 						duration: duration,
 						start: '{{ start_str }}',
 						onLoadTweets: function(tweets, minutes) {
-							player.createGraph(tracker.morphMinutes(minutes));
-							player.toggleLoader(false);
-							player.play();
+							mp.createGraph(tracker.morphMinutes(minutes));
+							mp.toggleLoader(false);
+							mp.play();
 						},
 					});
 					tracker.loadTweets();
 				},
 			});
-
-		player.loadVideo('{{ video_id }}');
 	</script>
 </body>
 </html>
