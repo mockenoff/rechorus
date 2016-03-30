@@ -1,7 +1,7 @@
 var API_READY = false,
 	MEDIA_PLAYERS = [];
 
-function MediaPlayer(container, settings) {
+window.MediaPlayer = function(container, settings) {
 	var player,
 		isReady = false,
 		videoStats = {
@@ -314,7 +314,7 @@ function MediaPlayer(container, settings) {
 	if (API_READY === true && player === undefined) {
 		this.onYouTubeIframeAPIReady();
 	}
-}
+};
 
 
 // Global callback for when the YouTube iframe API is ready
@@ -324,7 +324,7 @@ window.onYouTubeIframeAPIReady = function() {
 	for (var i = 0, l = MEDIA_PLAYERS.length; i < l; i++) {
 		MEDIA_PLAYERS[i].onYouTubeIframeAPIReady();
 	}
-}
+};
 
 
 // Create an optimized version of the resize event

@@ -9,7 +9,7 @@ function toQueryString(obj) {
 }
 
 
-function TweetTracker(container, settings) {
+window.TweetTracker = function(container, settings) {
 	var isLoaded = false,
 		tweets = null,
 		minutes = null,
@@ -148,7 +148,7 @@ function TweetTracker(container, settings) {
 
 	// Turn an object of minutes into an array of amplitude
 	this.morphMinutes = function(data) {
-		var morphed = []
+		var morphed = [],
 			start = Math.floor(settings.start.getTime() / (60 * 1000));
 		for (var i = 0, l = Math.ceil(settings.duration / 60); i <= l; i++) {
 			var minute = start + i;
@@ -160,4 +160,4 @@ function TweetTracker(container, settings) {
 		}
 		return morphed;
 	}.bind(this);
-}
+};

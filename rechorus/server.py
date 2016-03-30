@@ -21,9 +21,9 @@ from twitter import Twitter
 APP = flask.Flask(
 	__name__, static_url_path='',
 	static_folder=os.path.join(
-		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'static'),
+		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'build', 'static'),
 	template_folder=os.path.join(
-		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'templates'))
+		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'build', 'templates'))
 
 
 @APP.route('/', methods=['GET'])

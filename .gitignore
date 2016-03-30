@@ -60,3 +60,8 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# Generated directories and files
+bower_components/
+node_modules/
+build/

@@ -1,0 +1,28 @@
+{
+  "name": "rechorus",
+  "homepage": "https://github.com/mockenoff/rechorus",
+  "authors": [
+    "Tim Poon <timothycpoon@gmail.com>"
+  ],
+  "description": "Replay a live stream with the accompanying Twitter fun!",
+  "main": [
+    "static",
+    "rechorus",
+    "templates"
+  ],
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+      "d3": "~3.5.16",
+    "polymer": "Polymer/polymer#~1.4.0",
+    "google-youtube": "GoogleWebComponents/google-youtube#~1.2.1"
+  }
+}
