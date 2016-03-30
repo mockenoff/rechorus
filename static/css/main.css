@@ -200,43 +200,6 @@ body {
 	}
 
 /*
-	TWEETS
-*/
-#tweets {
-	padding: 10px;
-	flex-basis: 25%;
-	min-width: 300px;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	box-sizing: border-box;
-}
-.tweet {
-	display: flex;
-	margin: 0 0 20px 0;
-	align-items: flex-start;
-}
-	.tweet .profile {
-		width: 48px;
-		height: 48px;
-	}
-	.tweet .body {
-		flex-grow: 1;
-		padding: 0 0 0 10px;
-	}
-	.tweet .images {
-		width: 100%;
-		display: flex;
-		margin: 15px 0 0 0;
-		align-items: flex-start;
-	}
-		.tweet .images li {
-			flex-grow: 1;
-		}
-		.tweet .images img {
-			width: 100%;
-		}
-
-/*
 	MEDIA QUERIES
 */
 @media (orientation: portrait) {

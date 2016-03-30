@@ -1,5 +1,3 @@
-var API_READY = false;
-
 window.MediaPlayer = function(container, player, settings) {
 	var isReady = false,
 		videoStats = {
@@ -274,12 +272,6 @@ window.MediaPlayer = function(container, player, settings) {
 		var area = d3.svg.area().interpolate('basis').x(function(d) { return x(d[0]); }).y0(progress.container.clientHeight).y1(function(d) { return y(d[1]); });
 		progress.svg.append('path').datum(data).style('fill', 'url(#gradient)').attr('d', area);
 	}.bind(this);
-
-
-	// Add to the global tracker and init if the API is ready
-	if (API_READY === true && player === undefined) {
-		this.onYouTubeIframeAPIReady();
-	}
 };
 
 

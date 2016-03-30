@@ -16,10 +16,9 @@ var gulp = require('gulp'),
 	options = minimist(process.argv.slice(2), {
 		string: 'env',
 		default: { env: process.env.NODE_ENV || 'local' }
-	});
+	}),
 
-gulp.task('templates', function() {
-	var replacements = {
+	replacements = {
 		name: 'Rechorus',
 		title: 'Rechorus',
 		keywords: [],
@@ -31,6 +30,19 @@ gulp.task('templates', function() {
 		vendorUrl: '/vendor',
 		description: 'Rechorus — Replay a live stream with the accompanying Twitter fun!',
 	};
+
+gulp.task('components', function() {
+	return gulp.src(['static/components/*.html']).pipe(replace({
+		patterns: [
+			{
+				match: 'vendorUrl',
+				replacement: replacements.vendorUrl,
+			},
+		],
+	})).pipe(gulp.dest('build/static/components/'));
+});
+
+gulp.task('templates', function() {
 	return gulp.src(['templates/*.html']).pipe(replace({
 		patterns: [
 			{
@@ -103,7 +115,7 @@ gulp.task('assets', function() {
 	return gulp.src(['static/img/*']).pipe(gulp.dest('build/static/img/'));
 });
 
-gulp.task('inject', ['templates', 'scripts', 'styles'], function() {
+gulp.task('inject', ['components', 'templates', 'scripts', 'styles'], function() {
 	return gulp.src(['build/templates/*.html'])
 		.pipe(inject(gulp.src(['build/static/*.js', 'build/static/*.css'], {read: false}), {
 			removeTags: true,
@@ -115,7 +127,7 @@ gulp.task('inject', ['templates', 'scripts', 'styles'], function() {
 gulp.task('build', ['assets', 'inject']);
 
 gulp.task('watch', ['build'], function() {
-	watch(['static/js/*', 'static/css/*', 'templates/*.html', 'static/img/*'], batch(function (events, done) {
+	watch(['static/js/*', 'static/css/*', 'templates/*.html', 'static/img/*', 'static/components/*'], batch(function (events, done) {
 		gulp.start('build', done);
 	}));
 });

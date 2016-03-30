@@ -34,33 +34,6 @@ window.TweetTracker = function(container, settings) {
 		}
 	}
 
-	// Get the templates
-	var marker = /\[\[\s*([\w\d_]+)\s*\]\]/gim,
-		templates = {
-			tweet: 'tweet-template',
-			list: 'media-list-template',
-			item: 'media-item-template',
-		};
-	for (var key in templates) {
-		templates[key] = document.querySelector('#' + templates[key]).innerHTML;
-		templates[key] = templates[key].replace(marker, '[[$1]]');
-	}
-
-
-	// Fill templates with data
-	this.renderTemplate = function(template, data) {
-		if (template in templates === false) {
-			return console.error('No template named ' + template);
-		}
-
-		var render = templates[template];
-		for (var key in data) {
-			render = render.replace(new RegExp('\\[\\['+key+'\\]\\]', 'gim'), data[key]);
-		}
-
-		return render.replace(marker, '');
-	}.bind(this);
-
 
 	// Determine full ranges
 	if (typeof settings.start === 'string') {
@@ -100,10 +73,8 @@ window.TweetTracker = function(container, settings) {
 			tweets = [];
 			minutes = data.minutes;
 
-			var html = '';
 			for (var i = 0, l = data.tweets.length; i < l; i++) {
-				var media = '',
-					curr = format.parse(data.tweets[i].created_at).getTime() - settings.start.getTime();
+				var curr = format.parse(data.tweets[i].created_at).getTime() - settings.start.getTime();
 
 				if (curr < 0) {
 					continue;
@@ -111,23 +82,9 @@ window.TweetTracker = function(container, settings) {
 
 				timeline.push(curr);
 				tweets.push(data.tweets[i]);
-
-				if (data.tweets[i].media !== undefined) {
-					for (var j = 0, k = data.tweets[i].media.length; j < k; j++) {
-						media += this.renderTemplate('item', data.tweets[i].media[j]);
-					}
-					media = this.renderTemplate('list', {images: media});
-				}
-
-				html += this.renderTemplate('tweet', {
-					media: media,
-					created_at: data.tweets[i].created_at,
-					screen_name: data.tweets[i].user.screen_name,
-					formatted_text: data.tweets[i].formatted_text,
-					profile_image_url: data.tweets[i].user.profile_image_url,
-				});
 			}
-			container.innerHTML = html;
+
+			container.tweets = tweets;
 
 			for (i = 0, l = timeline.length; i < l; i++) {
 				timeline[i] = {
@@ -136,6 +93,7 @@ window.TweetTracker = function(container, settings) {
 					prev: i === l - 1 ? null : timeline[i + 1],
 				};
 			}
+
 			active = l - 1;
 			console.log('TIME', timeline);
 

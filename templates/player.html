@@ -34,8 +34,11 @@
 
 	<!-- Style stuff -->
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-	<link rel="import" href="@@vendorUrl/google-youtube/google-youtube.html" />
 	<!-- inject:css --><!-- endinject -->
+
+	<!-- Import stuff -->
+	<link rel="import" href="@@vendorUrl/google-youtube/google-youtube.html" />
+	<link rel="import" href="{{ url_for('static', filename='components/tweet-list.html') }}" />
 </head>
 <body>
 	<section id="media" tabindex="0">
@@ -65,50 +68,29 @@
 		</div>
 	</section>
 
-	<ol id="tweets"></ol>
-
-	<script type="text/template" id="tweet-template">
-		<li class="tweet">
-			<img class="profile" src="[[ profile_image_url ]]" />
-			<div class="body">
-				<h4><a href="https://twitter.com/[[ screen_name ]]">[[ screen_name ]]</a> <span class="date">[[ created_at ]]</span></h4>
-				<p>[[ formatted_text ]]</p>
-				[[ media ]]
-			</div>
-		</li>
-	</script>
-
-	<script type="text/template" id="media-list-template">
-		<ul class="images">
-			[[ images ]]
-		</ul>
-	</script>
-
-	<script type="text/template" id="media-item-template">
-		<li><a href="[[ expanded_url ]]"><img src="[[ media_url ]]" /></a></li>
-	</script>
+	<tweet-list id="tweets"></tweet-list>
 
 	<script src="@@vendorUrl/webcomponentsjs/webcomponents.min.js"></script>
 	<script src="@@vendorUrl/d3/d3.min.js"></script>
 	<!-- inject:js --><!-- endinject -->
 
 	<script>
-		var tracker,
+		var tt,
 			media = document.querySelector('#media'),
 			player = document.querySelector('#player'),
 			mp = new MediaPlayer(media, player, {
 				onPlayerReady: function(videoId, duration) {
 					console.log('CALLBACK', videoId, duration);
-					tracker = new TweetTracker(document.querySelector('#tweets'), {
+					tt = new TweetTracker(document.querySelector('#tweets'), {
 						duration: duration,
 						start: '{{ start_str }}',
 						onLoadTweets: function(tweets, minutes) {
-							mp.createGraph(tracker.morphMinutes(minutes));
+							mp.createGraph(tt.morphMinutes(minutes));
 							mp.toggleLoader(false);
 							mp.play();
 						},
 					});
-					tracker.loadTweets();
+					tt.loadTweets();
 				},
 			});
 	</script>
