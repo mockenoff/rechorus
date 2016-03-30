@@ -1,3 +1,4 @@
 Flask==0.10.1
 tweepy==3.5.0
 simplejson==3.8.2
+Flask-Bower==1.2.1

@@ -13,6 +13,7 @@ from urllib import parse
 
 import flask
 import tweepy
+from flask.ext.bower import Bower
 
 import utils
 from twitter import Twitter
@@ -24,6 +25,11 @@ APP = flask.Flask(
 		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'build', 'static'),
 	template_folder=os.path.join(
 		os.path.dirname(os.path.abspath(__file__)), os.pardir, 'build', 'templates'))
+
+
+Bower(APP)
+APP.config['BOWER_COMPONENTS_ROOT'] = os.path.join(
+	os.path.dirname(os.path.abspath(__file__)), os.pardir, 'bower_components')
 
 
 @APP.route('/', methods=['GET'])
