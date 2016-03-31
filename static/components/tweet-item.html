@@ -50,18 +50,15 @@
 			is: 'tweet-item',
 
 			properties: {
-				profileImageUrl: {
-					type: String,
+				revealed: {
+					type: Boolean,
+					value: false,
+					observer: '_revealedChanged',
 				},
-				screenName: {
-					type: String,
-				},
-				createdAt: {
-					type: String,
-				},
-				formattedText: {
-					type: String,
-				},
+				createdAt: String,
+				screenName: String,
+				formattedText: String,
+				profileImageUrl: String,
 				media: {
 					type: Array,
 					value: function() {
@@ -72,6 +69,14 @@
 					type: Boolean,
 					computed: '_computeMediaClass(media)',
 				},
+			},
+
+			_revealedChanged: function(newValue, oldValue) {
+				if (newValue) {
+					this.setAttribute('revealed', true);
+				} else {
+					this.removeAttribute('revealed');
+				}
 			},
 
 			_computeMediaClass: function(media) {

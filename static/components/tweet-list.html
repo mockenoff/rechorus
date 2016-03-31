@@ -17,6 +17,7 @@
 
 		<template is="dom-repeat" items="{{tweets}}">
 			<tweet-item
+				revealed="{{item.revealed}}"
 				profile-image-url="{{item.user.profile_image_url}}"
 				screen-name="{{item.user.screen_name}}"
 				created-at="{{item.created_at}}"
