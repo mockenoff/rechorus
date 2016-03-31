@@ -1,5 +1,7 @@
 window.MediaPlayer = function(container, player, settings) {
 	var isReady = false,
+		seeking = false,
+		lastSeek = false,
 		videoStats = {
 			id: null,
 			url: null,
@@ -16,6 +18,7 @@ window.MediaPlayer = function(container, player, settings) {
 				'#f03b20',
 				'#bd0026',
 			],
+			onUpdateTime:null,
 			onPlayerReady: null,
 		};
 
@@ -73,8 +76,6 @@ window.MediaPlayer = function(container, player, settings) {
 			player.pause();
 		}
 
-		updateTime();
-
 		if (typeof settings.onPlayerReady === 'function') {
 			settings.onPlayerReady(videoStats.id, videoStats.duration);
 		}
@@ -83,7 +84,7 @@ window.MediaPlayer = function(container, player, settings) {
 
 	// For when the player changes state
 	this.onPlayerStateChange = function(ev) {
-		console.log('STATE', isReady, ev);
+		console.log('STATE', isReady, ev.detail);
 		if (ev.detail.data < 0) {
 			isReady = false;
 		} else if (isReady === false) {
@@ -92,10 +93,15 @@ window.MediaPlayer = function(container, player, settings) {
 				this.onPlayerReady(ev);
 			}
 		}
+
 		if (ev.detail.data === YT.PlayerState.PAUSED) {
 			plause.setAttribute('data-state', 'pause');
 		} else {
 			plause.setAttribute('data-state', 'play');
+		}
+
+		if (ev.detail.data === YT.PlayerState.PLAYING) {
+			updateTime(false, seeking);
 		}
 	}.bind(this);
 
@@ -124,12 +130,12 @@ window.MediaPlayer = function(container, player, settings) {
 		} else if (keyCode === 37) {
 			var timeDelta = ev.shiftKey === true ? settings.skipChunk * 2 : settings.skipChunk,
 				newTime = Math.max(0, player.currenttime - timeDelta);
-			player.seekTo(newTime);
+			this.seekTo(newTime);
 			preventDefault = true;
 		} else if (keyCode === 39) {
 			var timeDelta = ev.shiftKey === true ? settings.skipChunk * 2 : settings.skipChunk,
 				newTime = Math.min(player.duration, player.currenttime + timeDelta);
-			player.seekTo(newTime);
+			this.seekTo(newTime);
 			preventDefault = true;
 		} else if (keyCode === 38) {
 			var newVolume = Math.min(100, player.getVolume() + settings.volumeChunk);
@@ -144,15 +150,16 @@ window.MediaPlayer = function(container, player, settings) {
 		if (preventDefault === true) {
 			ev.preventDefault();
 		}
-	});
+	}.bind(this));
 	document.body.focus();
 
 
 	// Mouse tracking
 	progress.container.addEventListener('click', function(ev) {
 		console.log('CLICK', ev);
-		player.seekTo(player.duration * (ev.offsetX / progress.width));
-	});
+		var newTime = videoStats.duration * (ev.offsetX / progress.width);
+		this.seekTo(newTime);
+	}.bind(this));
 
 	progress.container.addEventListener('mouseover', function(ev) {
 		progress.container.addEventListener('mousemove', onMousemove);
@@ -181,10 +188,29 @@ window.MediaPlayer = function(container, player, settings) {
 
 
 	// The progress tracker has to update
-	var updateTime = function() {
-		if (progress.progress.getAttribute('max') !== undefined && player !== undefined) {
-			progress.progress.setAttribute('value', player.currenttime);
-			requestAnimationFrame(updateTime);
+	var updateTime = function(isManual, newTime) {
+		if (isReady === true && progress.progress.getAttribute('max') !== undefined) {
+			if (player.state === YT.PlayerState.PLAYING) {
+				var timeDiff = player.currenttime - lastSeek;
+				if (seeking !== false && timeDiff >= 0 && timeDiff <= 1) {
+					newTime = seeking;
+				} else {
+					newTime = player.currenttime;
+				}
+			} else {
+				newTime = seeking === false ? player.currenttime : seeking;
+			}
+
+			console.log('UPDATE', isManual === true, newTime, seeking, lastSeek);
+			progress.progress.setAttribute('value', newTime);
+
+			if (typeof settings.onUpdateTime === 'function') {
+				settings.onUpdateTime(newTime);
+			}
+
+			if (isManual !== true && player.state === YT.PlayerState.PLAYING) {
+				requestAnimationFrame(updateTime);
+			}
 		}
 	}.bind(this);
 	requestAnimationFrame(updateTime);
@@ -202,13 +228,23 @@ window.MediaPlayer = function(container, player, settings) {
 	}.bind(this);
 
 
-	// Play/pause functions
+	// Proxy functions
 	this.play = function() {
 		player.play();
 	}.bind(this);
 
 	this.pause = function() {
 		player.pause();
+	}.bind(this);
+
+	this.seekTo = function(newTime) {
+		seeking = newTime;
+		if (lastSeek === false || player.state === YT.PlayerState.PLAYING) {
+			lastSeek = player.currenttime;
+		}
+		console.log('SEEK', seeking, lastSeek, player.currenttime);
+		player.seekTo(newTime);
+		updateTime(true, newTime);
 	}.bind(this);
 
 

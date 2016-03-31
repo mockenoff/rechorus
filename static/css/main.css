@@ -126,9 +126,12 @@ body {
 			color: #17BAB3;
 			background: transparent;
 		}
-		.controls progress::-webkit-progress-value,
-		.controls progress::-moz-progress-bar,
-		.controls progress::-ms-fill {
+		.controls progress::-ms-fill,
+		.controls progress::-moz-progress-bar {
+			background: #17BAB3;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) inset;
+		}
+		.controls progress::-webkit-progress-value {
 			background: #17BAB3;
 			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) inset;
 		}
@@ -211,6 +214,7 @@ body {
 	}
 	#tweets {
 		min-width: 0;
+		flex-grow: 1;
 		flex-basis: auto;
 	}
 }

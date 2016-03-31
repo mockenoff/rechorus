@@ -40,7 +40,7 @@
 		</style>
 
 		<template is="dom-repeat" items="{{tweets}}">
-			<li class="tweet">
+			<li class="tweet {{item.done ? 'show' : 'hide'}}">
 				<img class="profile" src="{{item.user.profile_image_url}}" />
 				<div class="body">
 					<h4><a href="https://twitter.com/{{item.user.screen_name}}">{{item.user.screen_name}}</a> <span class="date">{{item.created_at}}</span></h4>
@@ -65,12 +65,25 @@
 					value: function() {
 						return [];
 					},
+					observer: '_tweetsChanged'
 				},
+			},
+
+			_tweetsChanged: function(newValue, oldValue) {
+				console.log('CHANGE', newValue, oldValue);
+				newValue.forEach(function(value) {
+					if (value.done === undefined) {
+						value.done = false;
+					}
+				}.bind(this));
+			},
+
+			setActive: function(active) {
+				//
 			},
 
 			ready: function() {
 				var observer = new MutationObserver(function(mutations) {
-					console.log('ASDF', mutations, Polymer.dom(this.root).querySelectorAll('.tweet'));
 					mutations.forEach(function(mutation) {
 						for (var i = 0, l = mutation.addedNodes.length; i < l; i++) {
 							if (mutation.addedNodes[i].nodeName === 'LI') {

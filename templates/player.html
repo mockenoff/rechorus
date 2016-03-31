@@ -92,6 +92,11 @@
 					});
 					tt.loadTweets();
 				},
+				onUpdateTime: function(currentTime) {
+					if (tt !== undefined) {
+						tt.updateTime(currentTime);
+					}
+				},
 			});
 	</script>
 </body>

@@ -80,7 +80,7 @@ window.TweetTracker = function(container, settings) {
 					continue;
 				}
 
-				timeline.push(curr);
+				timeline.push(curr / 1000);
 				tweets.push(data.tweets[i]);
 			}
 
@@ -88,14 +88,22 @@ window.TweetTracker = function(container, settings) {
 
 			for (i = 0, l = timeline.length; i < l; i++) {
 				timeline[i] = {
+					done: false,
 					curr: timeline[i],
 					next: i < 1 ? null : timeline[i - 1].curr,
 					prev: i === l - 1 ? null : timeline[i + 1],
 				};
 			}
 
-			active = l - 1;
-			console.log('TIME', timeline);
+			timeline[i] = {
+				done: true,
+				curr: Infinity,
+				next: timeline[i - 1].curr,
+				prev: null,
+			};
+			timeline[i - 1].prev = Infinity;
+			active = l;
+			console.log('TIME', active, timeline);
 
 			if (typeof settings.onLoadTweets === 'function') {
 				settings.onLoadTweets(data.tweets, minutes);
@@ -117,5 +125,20 @@ window.TweetTracker = function(container, settings) {
 			}
 		}
 		return morphed;
+	}.bind(this);
+
+
+	// Update the display according to the time
+	this.updateTime = function(currentTime) {
+		if (timeline !== null && active in timeline === true) {
+			if (timeline[active].next === null) {
+				console.log('DONE');
+				active = null;
+			} else if (currentTime >= timeline[active].next) {
+				console.log('NEXT');
+				timeline[active].done = true;
+				active--;
+			}
+		}
 	}.bind(this);
 };
