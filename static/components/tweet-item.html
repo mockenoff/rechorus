@@ -1,0 +1,87 @@
+<link rel="import" href="@@vendorUrl/polymer/polymer.html">
+
+<dom-module id="tweet-item">
+	<template>
+		<style>
+			:host {
+				display: flex;
+				margin: 0 0 20px 0;
+				align-items: flex-start;
+			}
+			.profile {
+				width: 48px;
+				height: 48px;
+			}
+			.body {
+				flex-grow: 1;
+				padding: 0 0 0 10px;
+			}
+			.images {
+				margin: 0;
+				width: 100%;
+				display: flex;
+				align-items: flex-start;
+			}
+				.images[has-media] {
+					margin: 15px 0 0 0;
+				}
+				.images li {
+					flex-grow: 1;
+				}
+				.images img {
+					width: 100%;
+				}
+		</style>
+
+		<img class="profile" src="{{profileImageUrl}}" />
+		<div class="body">
+			<h4><a href="https://twitter.com/{{screenName}}">{{screenName}}</a> <span class="date">{{createdAt}}</span></h4>
+			<p>{{formattedText}}</p>
+			<ul class="images" has-media$="{{hasMedia}}">
+				<template is="dom-repeat" items="{{media}}">
+					<li><a href="{{item.expanded_url}}"><img src="{{item.media_url}}" /></a></li>
+				</template>
+			</ul>
+		</div>
+	</template>
+
+	<script>
+		Polymer({
+			is: 'tweet-item',
+
+			properties: {
+				profileImageUrl: {
+					type: String,
+				},
+				screenName: {
+					type: String,
+				},
+				createdAt: {
+					type: String,
+				},
+				formattedText: {
+					type: String,
+				},
+				media: {
+					type: Array,
+					value: function() {
+						return [];
+					},
+				},
+				hasMedia: {
+					type: Boolean,
+					computed: '_computeMediaClass(media)',
+				},
+			},
+
+			_computeMediaClass: function(media) {
+				return typeof media === 'object' && media.length > 0 ? true : false;
+			},
+
+			ready: function() {
+				var p = Polymer.dom(this.root).querySelector('p');
+				p.innerHTML = p.innerText;
+			},
+		});
+	</script>
+</dom-module>
