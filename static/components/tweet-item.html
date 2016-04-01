@@ -5,8 +5,15 @@
 		<style>
 			:host {
 				display: flex;
-				margin: 0 0 20px 0;
+				max-height: 0;
+				overflow: hidden;
+				margin: 0 0 0 0;
 				align-items: flex-start;
+				transition: all 0.2s ease-out;
+			}
+			:host[revealed] {
+				max-height: 100%;
+				margin: 0 0 20px 0;
 			}
 			.profile {
 				width: 48px;

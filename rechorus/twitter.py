@@ -95,7 +95,8 @@ class Twitter(object):
 		tweets.sort(key=lambda x: x['created_at'], reverse=True)
 		return tweets
 
-	def make_minutes(self, tweets):
+	@staticmethod
+	def make_minutes(tweets):
 		silo = defaultdict(list)
 		for tweet in tweets:
 			minute = round(tweet['created_at'].timestamp() / 60)
