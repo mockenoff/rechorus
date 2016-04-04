@@ -43,6 +43,15 @@
 			setActive: function(active) {
 				//
 			},
+
+			ready: function() {
+				this.addEventListener('click', function(ev) {
+					var target = ev.target.parentElement;
+					if (target.nodeName === 'TWEET-ITEM') {
+						target.isExpanded = true;
+					}
+				}.bind(this));
+			},
 		});
 	</script>
 </dom-module>

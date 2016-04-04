@@ -4,47 +4,73 @@
 	<template>
 		<style>
 			:host {
-				display: flex;
+				margin: 0;
 				max-height: 0;
+				display: flex;
 				overflow: hidden;
-				margin: 0 0 0 0;
 				align-items: flex-start;
 				transition: all 0.2s ease-out;
 			}
-			:host[revealed] {
-				max-height: 100%;
-				margin: 0 0 20px 0;
-			}
+				:host[revealed] {
+					max-height: 140px;
+					margin: 0 0 20px 0;
+				}
+				:host[is-expanded] {
+					max-height: none;
+				}
+					:host[is-expanded] .body[has-media] {
+						max-height: none;
+					}
+					:host[is-expanded] .body[has-media]:after {
+						bottom: -55%;
+					}
 			.profile {
 				width: 48px;
 				height: 48px;
 			}
 			.body {
 				flex-grow: 1;
+				max-height: 140px;
+				position: relative;
 				padding: 0 0 0 10px;
 			}
+				.body[has-media]:after {
+					content: '';
+					right: 0;
+					bottom: 0;
+					height: 55%;
+					width: calc(100% - 10px);
+					cursor: pointer;
+					display: block;
+					position: absolute;
+					background: linear-gradient(to top, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 0));
+					transition: bottom 0.2s ease-out;
+				}
+				.body[has-media] .images {
+					margin: 15px 0 0 0;
+				}
 			.images {
 				margin: 0;
 				width: 100%;
 				display: flex;
 				align-items: flex-start;
 			}
-				.images[has-media] {
-					margin: 15px 0 0 0;
-				}
 				.images li {
 					flex-grow: 1;
 				}
+					.images li:not(:first-child) {
+						margin: 0 0 0 10px;
+					}
 				.images img {
 					width: 100%;
 				}
 		</style>
 
 		<img class="profile" src="{{profileImageUrl}}" />
-		<div class="body">
+		<div class="body" has-media$="{{hasMedia}}">
 			<h4><a href="https://twitter.com/{{screenName}}">{{screenName}}</a> <span class="date">{{createdAt}}</span></h4>
 			<p>{{formattedText}}</p>
-			<ul class="images" has-media$="{{hasMedia}}">
+			<ul class="images">
 				<template is="dom-repeat" items="{{media}}">
 					<li><a href="{{item.expanded_url}}"><img src="{{item.media_url}}" /></a></li>
 				</template>
@@ -72,10 +98,23 @@
 						return [];
 					},
 				},
+				isExpanded: {
+					type: Boolean,
+					value: false,
+					observer: '_isExpandedChanged',
+				},
 				hasMedia: {
 					type: Boolean,
 					computed: '_computeMediaClass(media)',
 				},
+			},
+
+			_isExpandedChanged: function(newValue, oldValue) {
+				if (newValue) {
+					this.setAttribute('is-expanded', true);
+				} else {
+					this.removeAttribute('is-expanded');
+				}
 			},
 
 			_revealedChanged: function(newValue, oldValue) {
