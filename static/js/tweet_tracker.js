@@ -137,7 +137,7 @@ window.TweetTracker = function(container, settings) {
 			} else if (currentTime >= timeline[active].next) {
 				console.log('NEXT');
 				timeline[active].done = true;
-				active--;
+				container.setActive(--active);
 			}
 		}
 	}.bind(this);

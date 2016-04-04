@@ -12,17 +12,15 @@
 				transition: all 0.2s ease-out;
 			}
 				:host[revealed] {
-					max-height: 140px;
+					max-height: 200px;
 					margin: 0 0 20px 0;
 				}
-				:host[is-expanded] {
+				:host[is-expanded],
+				:host[is-expanded] .body[has-media] {
 					max-height: none;
 				}
-					:host[is-expanded] .body[has-media] {
-						max-height: none;
-					}
 					:host[is-expanded] .body[has-media]:after {
-						bottom: -55%;
+						bottom: -35%;
 					}
 			.profile {
 				width: 48px;
@@ -30,7 +28,7 @@
 			}
 			.body {
 				flex-grow: 1;
-				max-height: 140px;
+				max-height: 200px;
 				position: relative;
 				padding: 0 0 0 10px;
 			}
@@ -38,7 +36,7 @@
 					content: '';
 					right: 0;
 					bottom: 0;
-					height: 55%;
+					height: 35%;
 					width: calc(100% - 10px);
 					cursor: pointer;
 					display: block;
@@ -64,6 +62,21 @@
 				.images img {
 					width: 100%;
 				}
+			@media (orientation: portrait) {
+				:host[revealed], .body {
+					max-height: 140px;
+				}
+					:host[is-expanded],
+					:host[is-expanded] .body[has-media] {
+						max-height: none;
+					}
+				:host[is-expanded] .body[has-media]:after {
+					bottom: -55%;
+				}
+				.body[has-media]:after {
+					height: 55%;
+				}
+			}
 		</style>
 
 		<img class="profile" src="{{profileImageUrl}}" />

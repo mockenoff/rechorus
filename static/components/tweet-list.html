@@ -17,7 +17,6 @@
 
 		<template is="dom-repeat" items="{{tweets}}">
 			<tweet-item
-				revealed="{{item.revealed}}"
 				profile-image-url="{{item.user.profile_image_url}}"
 				screen-name="{{item.user.screen_name}}"
 				created-at="{{item.created_at}}"
@@ -37,11 +36,22 @@
 					value: function() {
 						return [];
 					},
+					observer: '_tweetsChanged',
 				},
 			},
 
+			_tweetsChanged: function(newValue, oldValue) {
+				var children = this.querySelectorAll('tweet-item');
+				for (var i = 0, l = this.tweets.length; i < l; i++) {
+					this.tweets[i].element = children[i];
+				}
+			},
+
 			setActive: function(active) {
-				//
+				console.log('SET', active, this);
+				for (var i = active, l = this.tweets.length; i < l; i++) {
+					this.tweets[i].element.revealed = true;
+				}
 			},
 
 			ready: function() {
