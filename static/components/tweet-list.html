@@ -48,10 +48,10 @@
 			},
 
 			setActive: function(active) {
-				console.log('SET', active, this);
 				for (var i = active, l = this.tweets.length; i < l; i++) {
 					this.tweets[i].element.revealed = true;
 				}
+				console.log('SET', active, i);
 			},
 
 			ready: function() {

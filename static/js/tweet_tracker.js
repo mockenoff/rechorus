@@ -131,13 +131,34 @@ window.TweetTracker = function(container, settings) {
 	// Update the display according to the time
 	this.updateTime = function(currentTime) {
 		if (timeline !== null && active in timeline === true) {
+			// We've run through the entire timeline
 			if (timeline[active].next === null) {
 				console.log('DONE');
 				active = null;
+			// Either regular ol' progression or seeking forward
 			} else if (currentTime >= timeline[active].next) {
-				console.log('NEXT');
-				timeline[active].done = true;
-				container.setActive(--active);
+				while (active >= 0 && currentTime >= timeline[active].next) {
+					timeline[active].done = true;
+					active--;
+				}
+				console.log('NEXT', active, active in timeline === true ? timeline[active] : null, currentTime);
+				if (active >= 0) {
+					container.setActive(active);
+				} else {
+					active = null;
+				}
+			// Seeking backwards
+			} else if (currentTime < timeline[active].curr && timeline[active].curr !== Infinity) {
+				while (active in timeline === true && currentTime < timeline[active].curr) {
+					timeline[active].done = true;
+					active++;
+				}
+				console.log('PREV', active, active in timeline === true ? timeline[active] : null, currentTime);
+				if (active in timeline === true) {
+					container.setActive(active);
+				} else {
+					active = timeline.length - 1;
+				}
 			}
 		}
 	}.bind(this);
