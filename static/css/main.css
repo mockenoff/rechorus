@@ -24,6 +24,13 @@ body {
 	flex-direction: column;
 }
 
+a {
+	color: #17BAB3;
+}
+	a:hover, a:focus {
+		text-decoration: underline;
+	}
+
 .wrapper {
 	width: 100%;
 	height: 100%;
@@ -57,7 +64,7 @@ header {
 	height: 40px;
 	display: flex;
 	background: rgba(33, 150, 243, 0.75);
-	background: linear-gradient(to top left, rgba(76, 184, 196, 0.75) -40%, rgba(33, 150, 243, 0.75));
+	background: linear-gradient(to top left, rgba(76, 184, 196, 1) 50%, rgba(33, 150, 243, 0.75));
 }
 nav {
 	height: 100%;
@@ -91,7 +98,7 @@ nav {
 	nav a {
 		z-index: 1;
 		height: 100%;
-		color: #DDF0FF;
+		color: #EDF7FF;
 		display: block;
 		padding: 0 10px;
 		font-size: 0.87em;
@@ -199,10 +206,12 @@ nav {
 		.controls progress::-ms-fill,
 		.controls progress::-moz-progress-bar {
 			background: #17BAB3;
+			background: linear-gradient(to top left, rgba(76, 184, 196, 1) 50%, rgba(33, 150, 243, 0.75));
 			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) inset;
 		}
 		.controls progress::-webkit-progress-value {
 			background: #17BAB3;
+			background: linear-gradient(to top left, rgba(76, 184, 196, 1) 50%, rgba(33, 150, 243, 0.75));
 			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) inset;
 		}
 	.progress svg {

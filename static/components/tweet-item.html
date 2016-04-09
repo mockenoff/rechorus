@@ -30,7 +30,7 @@
 				flex-grow: 1;
 				max-height: 200px;
 				position: relative;
-				padding: 0 0 0 10px;
+				padding: 0 0 0 12px;
 			}
 				.body[has-media]:after {
 					content: '';
@@ -41,7 +41,7 @@
 					cursor: pointer;
 					display: block;
 					position: absolute;
-					background: linear-gradient(to top, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 0));
+					background: linear-gradient(to top, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 80%);
 					transition: bottom 0.2s ease-out;
 				}
 				.body[has-media] .images {
@@ -62,6 +62,17 @@
 				.images img {
 					width: 100%;
 				}
+			.body h4 {
+				color: #888;
+				line-height: 100%;
+				padding: 0 0 6px 0;
+			}
+				.body h4 a {
+					color: inherit;
+				}
+				.body h4 span {
+					font-weight: normal;
+				}
 			@media (orientation: portrait) {
 				:host[revealed], .body {
 					max-height: 140px;
@@ -75,6 +86,7 @@
 				}
 				.body[has-media]:after {
 					height: 55%;
+					background: linear-gradient(to top, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 60%);
 				}
 			}
 		</style>
