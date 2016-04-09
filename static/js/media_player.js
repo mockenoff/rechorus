@@ -6,6 +6,7 @@ window.MediaPlayer = function(container, player, settings) {
 			id: null,
 			url: null,
 			duration: 0,
+			dataCache: null,
 		},
 		defaultSettings = {
 			skipChunk: 5,
@@ -209,6 +210,9 @@ window.MediaPlayer = function(container, player, settings) {
 		if (progress.svg !== null) {
 			progress.svg.attr('width', progress.container.clientWidth).attr('height', progress.container.clientHeight);
 		}
+		if (videoStats.dataCache !== null) {
+			this.createGraph();
+		}
 	}.bind(this);
 
 	window.addEventListener('optimizedResize', onResize);
@@ -280,8 +284,20 @@ window.MediaPlayer = function(container, player, settings) {
 	this.createGraph = function(data) {
 		if (data === undefined || typeof data.push !== 'function') {
 			data = [];
+			if (videoStats.dataCache !== null) {
+				videoStats.dataCache.forEach(function(value) {
+					data.push(value);
+				});
+			}
 		}
-		console.log('GRAPH', data);
+
+		if (data.length > 0) {
+			videoStats.dataCache = [];
+			data.forEach(function(value) {
+				videoStats.dataCache.push(value);
+			});
+		}
+		console.log('GRAPH', data, videoStats.dataCache);
 
 		// Make sure the SVG eixsts
 		if (progress.svg === null) {
