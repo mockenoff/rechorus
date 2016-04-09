@@ -112,7 +112,6 @@ body {
 		position: absolute;
 		pointer-events: none;
 		background: rgba(0, 0, 0, 0.5);
-		transition: width 0.1 ease-out;
 	}
 	.controls progress {
 		width: 100%;
@@ -142,6 +141,23 @@ body {
 		position: absolute;
 		pointer-events: none;
 	}
+	.track .label {
+		opacity: 0;
+		top: -30px;
+		right: -35px;
+		width: 70px;
+		height: 30px;
+		overflow: hidden;
+		line-height: 175%;
+		text-align: center;
+		position: absolute;
+		pointer-events: none;
+		background: rgba(255, 255, 255, 0.6);
+	}
+		.progress.active .label {
+			opacity: 1;
+			transition: opacity 0.1s ease-out;
+		}
 
 /*
 	MEDIA

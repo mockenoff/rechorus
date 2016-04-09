@@ -43,6 +43,7 @@ window.MediaPlayer = function(container, player, settings) {
 			container: container.querySelector('.progress'),
 			progress: container.querySelector('progress'),
 			track: container.querySelector('.track'),
+			label: container.querySelector('.label'),
 		};
 
 
@@ -65,7 +66,6 @@ window.MediaPlayer = function(container, player, settings) {
 		videoStats.id = player.videoId;
 		videoStats.duration = player.duration;
 
-		videoStats.duration = player.duration;
 		progress.progress.setAttribute('max', videoStats.duration);
 		progress.progress.setAttribute('value', player.currenttime);
 
@@ -162,17 +162,45 @@ window.MediaPlayer = function(container, player, settings) {
 	}.bind(this));
 
 	progress.container.addEventListener('mouseover', function(ev) {
+		progress.container.classList.add('active');
 		progress.container.addEventListener('mousemove', onMousemove);
 	});
 
 	progress.container.addEventListener('mouseout', function(ev) {
+		progress.container.classList.remove('active');
 		progress.container.removeEventListener('mousemove', onMousemove);
 		progress.track.style.width = '0%';
 	});
 
 	var onMousemove = function(ev) {
-		progress.track.style.width = (100 * (ev.offsetX / progress.width))+'%';
+		var newWidth = ev.offsetX / progress.width;
+		progress.track.style.width = (100 * newWidth) + '%';
+		progress.label.innerText = formatSeconds(videoStats.duration * newWidth);
 	}.bind(this);
+
+	function formatSeconds(value) {
+		if (typeof value !== 'number') {
+			value = 0;
+		} else {
+			value = Math.abs(Math.round(value));
+		}
+
+		var values = [],
+			remainder = 0,
+			pad = d3.format('02d');
+
+		if (value < 60) {
+			return '0:' + pad(value);
+		}
+
+		while (value >= 60) {
+			remainder = value % 60;
+			values.push(pad(remainder));
+			value = (value - remainder) / 60;
+		}
+
+		return value + ':' + values.reverse().join(':');
+	}
 
 
 	// Catch resizes so the SVG scales
