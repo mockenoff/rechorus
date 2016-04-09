@@ -1,7 +1,7 @@
 /*
 	RESET
 */
-html, body, header, div, span, section, iframe, progress, button, ol, ul, li, h4, img, p, form, input, label {
+html, body, header, div, span, section, iframe, progress, button, nav, ol, ul, li, h1, h2, h3, h4, img, p, a, form, input, label {
 	border: 0;
 	margin: 0;
 	padding: 0;
@@ -56,11 +56,63 @@ body {
 header {
 	height: 40px;
 	display: flex;
-	background: #FAFAFA;
+	background: rgba(33, 150, 243, 0.75);
+	background: linear-gradient(to top left, rgba(76, 184, 196, 0.75) -40%, rgba(33, 150, 243, 0.75));
 }
-	header nav ul {
+nav {
+	height: 100%;
+	flex-grow: 1;
+}
+	nav ul {
+		float: right;
+		height: 100%;
 		display: flex;
 	}
+	nav li {
+		height: 100%;
+		position: relative;
+	}
+		nav li:before {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			transform: scale(0.0);
+			transform-origin: center center;
+			transition: transform 0.2s ease-out;
+			background: rgba(255, 255, 255, 0.4);
+		}
+		nav li:hover:before {
+			transform: scale(1.0);
+		}
+	nav a {
+		z-index: 1;
+		height: 100%;
+		color: #DDF0FF;
+		display: block;
+		padding: 0 10px;
+		font-size: 0.87em;
+		line-height: 270%;
+		position: relative;
+		transition: color 0.2s ease-out;
+		font-family: Helvetica, Arial, sans-serif;
+		text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+	}
+		nav a:hover {
+			color: #FFF;
+			text-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+		}
+.logo {
+	width: 150px;
+	height: 40px;
+	overflow: hidden;
+	display: inline-block;
+	text-indent: -99999px;
+	background: transparent url(https://placehold.it/150x40) no-repeat 0 0;
+}
 
 /*
 	FORM
