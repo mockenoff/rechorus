@@ -176,7 +176,7 @@ window.MediaPlayer = function(container, player, settings) {
 	var onMousemove = function(ev) {
 		var newWidth = ev.offsetX / progress.width;
 		progress.track.style.width = (100 * newWidth) + '%';
-		progress.label.innerText = formatSeconds(videoStats.duration * newWidth);
+		progress.label.textContent = formatSeconds(videoStats.duration * newWidth);
 	}.bind(this);
 
 	function formatSeconds(value) {
